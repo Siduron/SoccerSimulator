@@ -1,5 +1,5 @@
 ﻿@{
-	ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Simulate Rounds";
 }
 
 @model SimulationViewModel
@@ -32,4 +32,41 @@
 			</table>
 		</div>
 	}
+</div>
+
+<div class="summary">
+	<h3>Summary</h3>
+	<table>
+		<thead>
+			<tr>
+				<th>Position</th>
+				<th>Team</th>
+				<th>Played</th>
+				<th>Win</th>
+				<th>Draw</th>
+				<th>Loss</th>
+				<th>For</th>
+				<th>Against</th>
+				<th>-/+</th>
+				<th>Points</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach(var team in Model.Summary)
+			{
+				<tr>
+					<td>@team.Position</td>
+					<td>@team.Team</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>@(0 - 0)</td>
+					<td>@team.Points</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 </div>

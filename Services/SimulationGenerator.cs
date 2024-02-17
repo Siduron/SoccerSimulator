@@ -1,28 +1,40 @@
 ﻿using SoccerSimulator.Models;
+using SoccerSimulator.Utils;
 
 namespace SoccerSimulator.Services
 {
 	/// <summary>
 	/// Simulates rounds of matches between two teams where all teams play against each other once
 	/// </summary>
-	public static class SimulationGenerator
+	public sealed class SimulationGenerator
 	{
-		private static int RoundLengthMinutes = 90;
-		private static Random Rand = new();
+		private static readonly int RoundLengthMinutes = 90;
+		private IRandomGenerator RandomGenerator;
+
+		public SimulationGenerator(IRandomGenerator randomGenerator)
+		{
+			RandomGenerator = randomGenerator;
+		}
 
 		/// <summary>
 		/// Generates a simulation model with rounds and matches between teams
 		/// </summary>
 		/// <param name="teams">The teams to use for the matches</param>
 		/// <returns>The simulation model with all rounds and matches</returns>
-		public static Simulation GenerateSimulation(IReadOnlyList<Team> teams) => new(GenerateRounds(teams.OrderBy(x => Rand.Next()).ToList()));
+		public Simulation GenerateSimulation(IReadOnlyList<Team> teams)
+		{
+			IReadOnlyList<Round> rounds = GenerateRounds(teams.OrderBy(x => RandomGenerator.NextDouble()).ToList());
+			IReadOnlyList<SummaryTeam> summary = GenerateSummaryTeams(rounds.SelectMany(round => round.Matches).ToList());	
+
+			return new Simulation(rounds, summary);
+		}
 
 		/// <summary>
 		/// Generates a list of rounds with matches between teams
 		/// </summary>
 		/// <param name="teams"></param>
 		/// <returns>List of rounds</returns>
-		private static IReadOnlyList<Round> GenerateRounds(List<Team> teams)
+		private IReadOnlyList<Round> GenerateRounds(List<Team> teams)
 		{
 			List<Round> rounds = new();
 
@@ -53,9 +65,12 @@ namespace SoccerSimulator.Services
 		/// <param name="homeTeam">The home team</param>
 		/// <param name="awayTeam">The away team</param>
 		/// <returns>A model of a match with two teams and their scores</returns>
-		private static Match GenerateMatch(Team homeTeam, Team awayTeam)
+		private Match GenerateMatch(Team homeTeam, Team awayTeam)
 		{
-			return new Match(homeTeam, awayTeam, SimulateGoals(homeTeam.Strength, awayTeam.Strength), SimulateGoals(awayTeam.Strength, homeTeam.Strength));
+			MatchTeam homeMatchTeam = new(homeTeam.Name, SimulateGoals(homeTeam.Strength, awayTeam.Strength));
+			MatchTeam awayMatchTeam = new(awayTeam.Name, SimulateGoals(awayTeam.Strength, homeTeam.Strength));
+
+			return new Match(homeMatchTeam, awayMatchTeam);
 		}
 
 		/// <summary>
@@ -64,15 +79,13 @@ namespace SoccerSimulator.Services
 		/// <param name="team1Strength"></param>
 		/// <param name="team2Strength"></param>
 		/// <returns>Amount of goals scored by team 1</returns>
-		private static int SimulateGoals(int team1Strength, int team2Strength)
+		private int SimulateGoals(int team1Strength, int team2Strength)
 		{
-			double team1Chance = CalculateGoalChance(team1Strength, team2Strength) / 10d;
-
 			int goals = 0;
 
 			for(int minute = 1; minute <= RoundLengthMinutes; minute++)
 			{
-				if(Rand.NextDouble() < team1Chance)
+				if(RandomGenerator.NextDouble() < CalculateGoalChance(team1Strength, team2Strength) / 10d) // TODO: fix magic number
 				{
 					goals++;
 				}
@@ -93,6 +106,39 @@ namespace SoccerSimulator.Services
 			double team1Chance = strength1 / totalStrength;
 
 			return team1Chance;
+		}
+
+		private static IReadOnlyList<SummaryTeam> GenerateSummaryTeams(IReadOnlyList<Match> matches)
+		{
+			Dictionary<string, int> teamScores = new Dictionary<string, int>();
+
+			foreach(Match match in matches)
+			{
+				UpdateTeamScore(match.HomeTeam);
+				UpdateTeamScore(match.AwayTeam);
+			}
+
+			List<(string, int)> orderedTeamScores = teamScores.OrderByDescending(team => team.Value).Select(x => (x.Key, x.Value)).ToList();
+			List<SummaryTeam> summaryTeams = new List<SummaryTeam>();
+
+			for(int i = 0, count = orderedTeamScores.Count; i < count; i++)
+			{
+				summaryTeams.Add(new SummaryTeam(i + 1, orderedTeamScores[i].Item1, orderedTeamScores[i].Item2));
+			}
+
+			void UpdateTeamScore(MatchTeam matchTeam)
+			{
+				if(teamScores.TryGetValue(matchTeam.Name, out int teamScore))
+				{
+					teamScores[matchTeam.Name] += matchTeam.Score;
+				}
+				else
+				{
+					teamScores.Add(matchTeam.Name, matchTeam.Score);
+				}
+			}
+
+			return summaryTeams;
 		}
 	}
 }

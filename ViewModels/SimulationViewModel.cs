@@ -6,9 +6,12 @@ namespace SoccerSimulator.ViewModels
 	{
 		public IReadOnlyList<RoundViewModel> Rounds { get; }
 
-		public SimulationViewModel(IReadOnlyList<RoundViewModel> rounds)
+		public IReadOnlyList<SummaryTeamViewModel> Summary { get; }
+
+		public SimulationViewModel(IReadOnlyList<RoundViewModel> rounds, IReadOnlyList<SummaryTeamViewModel> summary)
 		{
 			Rounds = rounds;
+			Summary = summary;
 		}
 	}
 
@@ -24,25 +27,53 @@ namespace SoccerSimulator.ViewModels
 
 	public class MatchViewModel
 	{
-		public TeamViewModel HomeTeam { get; }
-		public TeamViewModel AwayTeam { get; }
+		public MatchTeamViewModel HomeTeam { get; }
+		public MatchTeamViewModel AwayTeam { get; }
 
-		public MatchViewModel(TeamViewModel homeTeam, TeamViewModel awayTeam)
+		public MatchViewModel(MatchTeamViewModel homeTeam, MatchTeamViewModel awayTeam)
 		{
 			HomeTeam = homeTeam;
 			AwayTeam = awayTeam;
 		}
 	}
 
-	public class TeamViewModel
+	public class MatchTeamViewModel
 	{
 		public string Name { get; }
 		public int Score { get; }
 
-		public TeamViewModel(string name, int score)
+		public MatchTeamViewModel(string name, int score)
 		{
 			Name = name;
 			Score = score;
+		}
+	}
+
+	public class SummaryTeamViewModel
+	{
+		public int Position { get; }
+		public string Team { get; }
+		//public int Played { get; }
+		//public int Win { get; }
+		//public int Draw { get; }
+		//public int Loss { get; }
+		//public int For { get; }
+		//public int Against { get; }
+		//public string Difference { get; }
+		public int Points { get; }
+
+		public SummaryTeamViewModel(int position, string team, int points)
+		{
+			Position = position;
+			Team = team;
+//			Played = played;
+//			Win = win;
+//			Draw = draw;
+//			Loss = loss;
+//			For = @for;
+//			Against = against;
+//			Difference = difference;
+			Points = points;
 		}
 	}
 }

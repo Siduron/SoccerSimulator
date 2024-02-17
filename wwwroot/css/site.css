@@ -24,9 +24,10 @@ body {
 .rounds {
 	display: flex;
 	width: 100%;
+	margin-bottom: 24px;
 }
 
-.round {
+.round, .summary {
 	margin-right: 24px;
 	background-color: lightgrey;
 	border-color: black;

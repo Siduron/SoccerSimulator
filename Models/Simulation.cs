@@ -3,10 +3,12 @@
 	public class Simulation
 	{
 		public IReadOnlyList<Round> Rounds { get; }
+		public IReadOnlyList<SummaryTeam> Summary { get; }
 
-		public Simulation(IReadOnlyList<Round> rounds)
+		public Simulation(IReadOnlyList<Round> rounds, IReadOnlyList<SummaryTeam> summary)
 		{
 			Rounds = rounds;
+			Summary = summary;
 		}
 	}
 
@@ -22,17 +24,39 @@
 
 	public class Match
 	{
-		public Team HomeTeam { get; }
-		public Team AwayTeam { get; }
-		public int HomeScore { get; set; }
-		public int AwayScore { get; set; }
+		public MatchTeam HomeTeam { get; }
+		public MatchTeam AwayTeam { get; }
 
-		public Match(Team homeTeam, Team awayTeam, int homeScore, int awayScore)
+		public Match(MatchTeam homeTeam, MatchTeam awayTeam)
 		{
 			HomeTeam = homeTeam;
 			AwayTeam = awayTeam;
-			HomeScore = homeScore;
-			AwayScore = awayScore;
+		}
+	}
+
+	public class MatchTeam
+	{
+		public string Name { get; }
+		public int Score { get; }
+
+		public MatchTeam(string name, int score)
+		{
+			Name = name;
+			Score = score;
+		}
+	}
+
+	public class SummaryTeam
+	{
+		public int Position { get; }
+		public string Team { get; }
+		public int Points { get; }
+
+		public SummaryTeam(int position, string team, int points)
+		{
+			Position = position;
+			Team = team;
+			Points = points;
 		}
 	}
 }
