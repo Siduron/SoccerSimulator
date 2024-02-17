@@ -8,26 +8,17 @@ namespace SoccerSimulator.Controllers
 {
 	public class SimulationController : Controller
 	{
-		// TODO: remove this?
-		private readonly ILogger<SimulationController> _logger;
 		private readonly IMapper _mapper;
-		private readonly ISimulationDataProvider _simulationDataProvider;
+		private readonly ISimulationService _simulationDataProvider;
 
-		public SimulationController(ISimulationDataProvider simulationDataProvider, ILogger<SimulationController> logger, IMapper mapper)
+		public SimulationController(IMapper mapper, ISimulationService simulationDataProvider)
 		{
-			_logger = logger;
 			_mapper = mapper;
 			_simulationDataProvider = simulationDataProvider;
 		}
 
-		public IActionResult Index() => View(_mapper.Map<SimulationViewModel>(_simulationDataProvider.GetSimulationData()));
+		public async Task<IActionResult> Index() => View(_mapper.Map<SimulationViewModel>(await _simulationDataProvider.GetSimulation()));
 		
-		// TODO: remove this?
-		public IActionResult Privacy()
-		{
-			return View();
-		}
-
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
 		{

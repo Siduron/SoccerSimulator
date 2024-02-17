@@ -12,7 +12,7 @@ namespace SoccerSimulator.MapProfiles
 			CreateMap<Round, RoundViewModel>();
 			CreateMap<Match, MatchViewModel>();
 			CreateMap<MatchTeam, MatchTeamViewModel>();
-			CreateMap<SummaryTeam, SummaryTeamViewModel>();
+			CreateMap<TeamSummary, SummaryTeamViewModel>();
 		}
 	}
 }

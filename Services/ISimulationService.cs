@@ -2,8 +2,8 @@
 
 namespace SoccerSimulator.Services
 {
-	public interface ISimulationDataProvider
+	public interface ISimulationService
 	{
-		Simulation GetSimulationData();
+		Task<Simulation> GetSimulation();
 	}
 }

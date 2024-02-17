@@ -1,7 +1,8 @@
-﻿using SoccerSimulator.Models;
+﻿using SoccerSimulator.DataProviders;
+using SoccerSimulator.Models;
 using SoccerSimulator.Utils;
 
-namespace SoccerSimulator.Services
+namespace SoccerSimulator.Services.Generators
 {
 	/// <summary>
 	/// Simulates rounds of matches between two teams where all teams play against each other once
@@ -9,24 +10,38 @@ namespace SoccerSimulator.Services
 	public sealed class SimulationGenerator
 	{
 		private static readonly int RoundLengthMinutes = 90;
-		private IRandomGenerator RandomGenerator;
 
-		public SimulationGenerator(IRandomGenerator randomGenerator)
+		private ITeamsDataProvider _teamsDataProvider;
+		private IRandomGenerator _randomGenerator;
+		private static double _goalChanceModifier;
+
+		public SimulationGenerator(ITeamsDataProvider teamsDataProvider, IRandomGenerator randomGenerator, double goalChanceModifier)
 		{
-			RandomGenerator = randomGenerator;
+			_teamsDataProvider = teamsDataProvider;
+			_randomGenerator = randomGenerator;
+			_goalChanceModifier = goalChanceModifier;
 		}
 
 		/// <summary>
 		/// Generates a simulation model with rounds and matches between teams
 		/// </summary>
-		/// <param name="teams">The teams to use for the matches</param>
 		/// <returns>The simulation model with all rounds and matches</returns>
-		public Simulation GenerateSimulation(IReadOnlyList<Team> teams)
+		public async Task<Simulation> GenerateSimulation()
 		{
-			IReadOnlyList<Round> rounds = GenerateRounds(teams.OrderBy(x => RandomGenerator.NextDouble()).ToList());
-			IReadOnlyList<SummaryTeam> summary = GenerateSummaryTeams(rounds.SelectMany(round => round.Matches).ToList());	
+			if(await _teamsDataProvider.GetTeams() is { } teams)
+			{
+				// Shuffle the teams and generate rounds
+				List<Team> shuffledTeams = teams.OrderBy(x => _randomGenerator.NextDouble()).ToList();
+				IReadOnlyList<Round> rounds = await Task.Run(() => GenerateRounds(shuffledTeams));
 
-			return new Simulation(rounds, summary);
+				// Get all matches and generate a summary of them
+				IReadOnlyList<Match> allMatches = rounds.SelectMany(round => round.Matches).ToList();
+				IReadOnlyList<TeamSummary> summary = await Task.Run(() => SummaryGenerator.GenerateTeamSummaries(allMatches));
+
+				return new Simulation(rounds, summary);
+			}
+
+			return new Simulation(new List<Round>(), new List<TeamSummary>());
 		}
 
 		/// <summary>
@@ -85,7 +100,7 @@ namespace SoccerSimulator.Services
 
 			for(int minute = 1; minute <= RoundLengthMinutes; minute++)
 			{
-				if(RandomGenerator.NextDouble() < CalculateGoalChance(team1Strength, team2Strength) / 10d) // TODO: fix magic number
+				if(_randomGenerator.NextDouble() < CalculateGoalChance(team1Strength, team2Strength))
 				{
 					goals++;
 				}
@@ -100,45 +115,6 @@ namespace SoccerSimulator.Services
 		/// <param name="strength1"></param>
 		/// <param name="strength2"></param>
 		/// <returns>Chance of scoring a goal</returns>
-		private static double CalculateGoalChance(int strength1, int strength2)
-		{
-			double totalStrength = strength1 + strength2;
-			double team1Chance = strength1 / totalStrength;
-
-			return team1Chance;
-		}
-
-		private static IReadOnlyList<SummaryTeam> GenerateSummaryTeams(IReadOnlyList<Match> matches)
-		{
-			Dictionary<string, int> teamScores = new Dictionary<string, int>();
-
-			foreach(Match match in matches)
-			{
-				UpdateTeamScore(match.HomeTeam);
-				UpdateTeamScore(match.AwayTeam);
-			}
-
-			List<(string, int)> orderedTeamScores = teamScores.OrderByDescending(team => team.Value).Select(x => (x.Key, x.Value)).ToList();
-			List<SummaryTeam> summaryTeams = new List<SummaryTeam>();
-
-			for(int i = 0, count = orderedTeamScores.Count; i < count; i++)
-			{
-				summaryTeams.Add(new SummaryTeam(i + 1, orderedTeamScores[i].Item1, orderedTeamScores[i].Item2));
-			}
-
-			void UpdateTeamScore(MatchTeam matchTeam)
-			{
-				if(teamScores.TryGetValue(matchTeam.Name, out int teamScore))
-				{
-					teamScores[matchTeam.Name] += matchTeam.Score;
-				}
-				else
-				{
-					teamScores.Add(matchTeam.Name, matchTeam.Score);
-				}
-			}
-
-			return summaryTeams;
-		}
+		private static double CalculateGoalChance(int strength1, int strength2) => ((double)strength1 / (strength1 + strength2) / _goalChanceModifier);
 	}
 }

@@ -53,26 +53,24 @@ namespace SoccerSimulator.ViewModels
 	{
 		public int Position { get; }
 		public string Team { get; }
-		//public int Played { get; }
-		//public int Win { get; }
-		//public int Draw { get; }
-		//public int Loss { get; }
-		//public int For { get; }
-		//public int Against { get; }
-		//public string Difference { get; }
+		public int Played => Win + Draw + Loss;
+		public int Win { get; }
+		public int Draw { get; }
+		public int Loss { get; }
+		public int GoalsFor { get; }
+		public int GoalsAgainst { get; }
 		public int Points { get; }
+		public int GoalDifference => GoalsFor - GoalsAgainst;
 
-		public SummaryTeamViewModel(int position, string team, int points)
+		public SummaryTeamViewModel(int position, string team, int win, int draw, int loss, int goalsFor, int goalsAgainst, int points)
 		{
 			Position = position;
 			Team = team;
-//			Played = played;
-//			Win = win;
-//			Draw = draw;
-//			Loss = loss;
-//			For = @for;
-//			Against = against;
-//			Difference = difference;
+			Win = win;
+			Draw = draw;
+			Loss = loss;
+			GoalsFor = goalsFor;
+			GoalsAgainst = goalsAgainst;
 			Points = points;
 		}
 	}

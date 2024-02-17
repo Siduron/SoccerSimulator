@@ -1,37 +1,66 @@
-html {
-	font-size: 14px;
-}
-
 @media (min-width: 768px) {
 	html {
 		font-size: 16px;
 	}
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-	box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
 html {
+	font-size: 18px;
 	position: relative;
 	min-height: 100%;
 }
 
 body {
 	margin-bottom: 60px;
+	background-color: #89BCE5;
+}
+
+.simulation {
+	width: auto;
+	margin-top: 48px;
 }
 
 .rounds {
 	display: flex;
-	width: 100%;
+	justify-content: center;
 	margin-bottom: 24px;
+	width: 100%;
+}
+
+.summary {
+	width: auto;
 }
 
 .round, .summary {
-	margin-right: 24px;
-	background-color: lightgrey;
-	border-color: black;
+	flex-grow: 1;
+	margin: 0 10px;
+	background-color: #46A1EB;
+	border-color: #3A84C0 !important;
 	border-width: 1px;
+	border-radius: 10px;
 	border: solid;
 	padding: 8px;
+	animation: scaleIn 0.2s ease-in-out;
+}
+
+td {
+	min-width: 100px;
+}
+
+.points {
+	font-weight: bold;
+}
+
+@keyframes scaleIn {
+	0% {
+		transform: scale(0.5);
+	}
+
+	75% {
+		transform: scale(1.05);
+	}
+
+	100% {
+		transform: scale(1);
+	}
 }

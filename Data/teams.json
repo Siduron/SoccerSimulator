@@ -1,0 +1,18 @@
+﻿[
+  {
+	"Name": "Team A",
+	"Strength": 10
+  },
+  {
+	"Name": "Team B",
+	"Strength": 15
+  },
+  {
+	"Name": "Team C",
+	"Strength": 40
+  },
+  {
+	"Name": "Team D",
+	"Strength": 45
+  }
+]

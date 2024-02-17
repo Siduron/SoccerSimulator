@@ -1,72 +1,74 @@
 ﻿@{
-	ViewData["Title"] = "Simulate Rounds";
+	ViewData["Title"] = "Match Results";
 }
 
-@model SimulationViewModel
-<div class="rounds">
-	@for(var i = 0; i < Model.Rounds.Count; i++)
-	{
-		var round = Model.Rounds[i];
+<div class="simulation">
+	@model SimulationViewModel
+	<div class="rounds">
+		@for(var i = 0; i < Model.Rounds.Count; i++)
+		{
+			var round = Model.Rounds[i];
 
-		<div class="round">
-			<h3>Round @(i + 1)</h3>
-			<table>
-				<thead>
-					<tr>
-						<th>Home</th>
-						<th>Score</th>
-						<th>Away</th>
-					</tr>
-				</thead>
-				<tbody>
-					@foreach(var match in round.Matches)
-					{
+			<div class="round">
+				<h3>ROUND @(i + 1)</h3>
+				<table>
+					<thead>
 						<tr>
-							<td>@match.HomeTeam.Name</td>
-							<td>@match.HomeTeam.Score - @match.AwayTeam.Score</td>
-							<td>@match.AwayTeam.Name</td>
+							<th>Home</th>
+							<th>Score</th>
+							<th>Away</th>
 						</tr>
-					}
+					</thead>
+					<tbody>
+						@foreach(var match in round.Matches)
+						{
+							<tr>
+								<td>@match.HomeTeam.Name</td>
+								<td>@match.HomeTeam.Score - @match.AwayTeam.Score</td>
+								<td>@match.AwayTeam.Name</td>
+							</tr>
+						}
 
-				</tbody>
-			</table>
-		</div>
-	}
-</div>
+					</tbody>
+				</table>
+			</div>
+		}
+	</div>
 
-<div class="summary">
-	<h3>Summary</h3>
-	<table>
-		<thead>
-			<tr>
-				<th>Position</th>
-				<th>Team</th>
-				<th>Played</th>
-				<th>Win</th>
-				<th>Draw</th>
-				<th>Loss</th>
-				<th>For</th>
-				<th>Against</th>
-				<th>-/+</th>
-				<th>Points</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach(var team in Model.Summary)
-			{
+	<div class="summary">
+		<h3>SUMMARY</h3>
+		<table>
+			<thead>
 				<tr>
-					<td>@team.Position</td>
-					<td>@team.Team</td>
-					<td>0</td>
-					<td>0</td>
-					<td>0</td>
-					<td>0</td>
-					<td>0</td>
-					<td>0</td>
-					<td>@(0 - 0)</td>
-					<td>@team.Points</td>
+					<th>Position</th>
+					<th>Team</th>
+					<th>Played</th>
+					<th>Win</th>
+					<th>Draw</th>
+					<th>Loss</th>
+					<th>For</th>
+					<th>Against</th>
+					<th>-/+</th>
+					<th>Points</th>
 				</tr>
-			}
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+				@foreach(var team in Model.Summary)
+				{
+					<tr>
+						<td>@team.Position</td>
+						<td>@team.Team</td>
+						<td>@team.Played</td>
+						<td>@team.Win</td>
+						<td>@team.Draw</td>
+						<td>@team.Loss</td>
+						<td>@team.GoalsFor</td>
+						<td>@team.GoalsAgainst</td>
+						<td>@team.GoalDifference</td>
+						<td class="points">@team.Points</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
 </div>

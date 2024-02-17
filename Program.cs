@@ -1,11 +1,15 @@
+using SoccerSimulator.DataProviders;
 using SoccerSimulator.Services;
+using SoccerSimulator.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<ISimulationDataProvider, SimulationDataProvider>();
+builder.Services.AddSingleton<IRandomGenerator, RandomGenerator>();
+builder.Services.AddSingleton<ITeamsDataProvider, TeamsDataProvider>();
+builder.Services.AddSingleton<ISimulationService, SimulationService>();
 
 var app = builder.Build();
 
