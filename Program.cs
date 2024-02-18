@@ -1,5 +1,6 @@
 using SoccerSimulator.DataProviders;
 using SoccerSimulator.Services;
+using SoccerSimulator.Services.Generators.RoundsGenerator;
 using SoccerSimulator.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,8 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<IRandomGenerator, RandomGenerator>();
-builder.Services.AddSingleton<ITeamsDataProvider, TeamsDataProvider>();
+builder.Services.AddSingleton<ITeamsDataProvider, JSONTeamsDataProvider>();
 builder.Services.AddSingleton<ISimulationService, SimulationService>();
+builder.Services.AddSingleton<IRoundsGenerator, TestRoundsGenerator>();
 
 var app = builder.Build();
 

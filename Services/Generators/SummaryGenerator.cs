@@ -15,32 +15,39 @@ namespace SoccerSimulator.Services.Generators
 		/// </summary>
 		/// <param name="matches"></param>
 		/// <returns>A list with data that summarizes the results of a team, sorted by rank (which is based on various results)</returns>
-		public static IReadOnlyList<TeamSummary> GenerateTeamSummaries(IReadOnlyList<Match> matches)
+		public static async Task<IReadOnlyList<TeamSummary>> GenerateTeamSummaries(IReadOnlyList<Round> rounds)
 		{
-			Dictionary<string, SummaryData> teamData = new Dictionary<string, SummaryData>();
-
-			foreach(Match match in matches)
+			return await Task.Run(() =>
 			{
-				UpdateTeamData(ref teamData, match.HomeTeam, match.AwayTeam);
-				UpdateTeamData(ref teamData, match.AwayTeam, match.HomeTeam);
-			}
+				IReadOnlyList<Match> matches = rounds.SelectMany(round => round.Matches).ToList();
 
-			// Order the teams by points, then by goal difference, then by goals scored to determine the rank
-			IReadOnlyList<(string TeamName, SummaryData Data)> orderedTeamScores = teamData
-				.OrderByDescending(team => team.Value.Points)
-				.ThenByDescending(team => team.Value.GoalsFor - team.Value.GoalsAgainst)
-				.ThenByDescending(team => team.Value.GoalsFor)
-				.Select(x => (x.Key, x.Value)).ToList();
+				Dictionary<string, SummaryData> teamData = new Dictionary<string, SummaryData>();
 
-			List<TeamSummary> summaryTeams = new List<TeamSummary>();
+				foreach(Match match in matches)
+				{
+					UpdateTeamData(ref teamData, match.HomeTeam, match.AwayTeam);
+					UpdateTeamData(ref teamData, match.AwayTeam, match.HomeTeam);
+				}
 
-			for(int i = 0, count = orderedTeamScores.Count; i < count; i++)
-			{
-				SummaryData teamSummaryData = orderedTeamScores[i].Data;
-				summaryTeams.Add(new TeamSummary(i + 1, orderedTeamScores[i].TeamName, teamSummaryData.Won, teamSummaryData.Draw, teamSummaryData.Loss, teamSummaryData.GoalsFor, teamSummaryData.GoalsAgainst, teamSummaryData.Points));
-			}
+				// Order the teams by points, then by goal difference, then by goals scored to determine the rank
+				IReadOnlyList<(string TeamName, SummaryData Data)> orderedTeamScores = teamData
+					.OrderByDescending(team => team.Value.Points) // Order by points
+					.ThenByDescending(team => team.Value.GoalsFor - team.Value.GoalsAgainst) // Then by goal difference
+					.ThenByDescending(team => team.Value.GoalsFor) // Then by goals scored
+					// Sorting by goals against wouldn't make sense, as it's already taken into account in the goal difference
+					// I'd order by a head 2 head result, but what does that mean and is it even possible if each team plays against eachother just once?
+					.Select(x => (x.Key, x.Value)).ToList();
 
-			return summaryTeams;
+				List<TeamSummary> summaryTeams = new List<TeamSummary>();
+
+				for(int i = 0, count = orderedTeamScores.Count; i < count; i++)
+				{
+					SummaryData teamSummaryData = orderedTeamScores[i].Data;
+					summaryTeams.Add(new TeamSummary(i + 1, orderedTeamScores[i].TeamName, teamSummaryData.Won, teamSummaryData.Draw, teamSummaryData.Loss, teamSummaryData.GoalsFor, teamSummaryData.GoalsAgainst, teamSummaryData.Points));
+				}
+
+				return summaryTeams;
+			});
 		}
 
 		/// <summary>

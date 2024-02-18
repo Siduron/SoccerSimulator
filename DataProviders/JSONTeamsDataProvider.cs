@@ -7,13 +7,13 @@ namespace SoccerSimulator.DataProviders
 	/// Retrieves the data of the teams from a JSON file. 
 	/// An implementation of ITeamsDataProvider that uses a database would have been preferred, but JSON is the data source of choice due to the time constraint.
 	/// </summary>
-	public class TeamsDataProvider : ITeamsDataProvider
+	public class JSONTeamsDataProvider : ITeamsDataProvider
 	{
 		private static readonly string DataPath = "Data/teams.json";
 
 		private readonly ILogger _logger;
 
-		public TeamsDataProvider(ILogger<TeamsDataProvider> logger)
+		public JSONTeamsDataProvider(ILogger<JSONTeamsDataProvider> logger)
 		{
 			_logger = logger;
 		}
