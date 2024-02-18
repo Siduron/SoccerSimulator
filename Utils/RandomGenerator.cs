@@ -12,9 +12,6 @@
 			_random = new Random();
 		}
 
-		public double NextDouble()
-		{
-			return _random.NextDouble();
-		}
+		public double NextDouble() => _random.NextDouble();
 	}
 }

@@ -4,6 +4,6 @@ namespace SoccerSimulator.DataProviders
 {
 	public interface ITeamsDataProvider
 	{
-		Task<IReadOnlyList<Team>?> GetTeams();
+		Task<IEnumerable<Team>?> GetTeams();
 	}
 }

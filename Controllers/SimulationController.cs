@@ -18,7 +18,7 @@ namespace SoccerSimulator.Controllers
 		}
 
 		public async Task<IActionResult> Index() => View(_mapper.Map<SimulationViewModel>(await _simulationDataProvider.GetSimulation()));
-		
+
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
 		{

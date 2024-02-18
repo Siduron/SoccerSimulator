@@ -1,22 +1,19 @@
 ﻿using SoccerSimulator.Models;
-using SoccerSimulator.Utils;
-using SoccerSimulator.Services.Generators;
-using SoccerSimulator.DataProviders;
 using SoccerSimulator.Services.Generators.RoundsGenerator;
+using SoccerSimulator.Services.Generators.SummaryGenerator;
 
 namespace SoccerSimulator.Services
 {
-    /// <summary>
-    /// Returns a simulation generated based on data of teams
-    /// </summary>
-    public class SimulationService : ISimulationService
+	/// <summary>
+	/// Returns a simulation generated based on data of teams
+	/// </summary>
+	public class SimulationService : ISimulationService
 	{
 		private readonly IRoundsGenerator _roundsGenerator;
 
 		public SimulationService(IRoundsGenerator roundsGenerator)
 		{
 			_roundsGenerator = roundsGenerator;
-			//_roundsGenerator = new RoundsGenerator(teamsDataProvider, randomGenerator, _goalChanceModifier);
 		}
 
 		/// <summary>

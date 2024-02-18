@@ -9,9 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddControllersWithViews();
 builder.Services.AddSingleton<IRandomGenerator, RandomGenerator>();
-builder.Services.AddSingleton<ITeamsDataProvider, JSONTeamsDataProvider>();
+builder.Services.AddSingleton<ITeamsDataProvider, SQLTeamsDataProvider>();
 builder.Services.AddSingleton<ISimulationService, SimulationService>();
-builder.Services.AddSingleton<IRoundsGenerator, TestRoundsGenerator>();
+builder.Services.AddSingleton<IRoundsGenerator, RoundsGenerator>();
 
 var app = builder.Build();
 

@@ -4,10 +4,10 @@ using SoccerSimulator.Models;
 namespace SoccerSimulator.DataProviders
 {
 	/// <summary>
-	/// Retrieves the data of the teams from a JSON file. 
+	/// Implementation of <see cref="ITeamsDataProvider"/> that retrieves the data of the teams from a JSON file. 
 	/// An implementation of ITeamsDataProvider that uses a database would have been preferred, but JSON is the data source of choice due to the time constraint.
 	/// </summary>
-	public class JSONTeamsDataProvider : ITeamsDataProvider
+	public sealed class JSONTeamsDataProvider : ITeamsDataProvider
 	{
 		private static readonly string DataPath = "Data/teams.json";
 
@@ -22,9 +22,9 @@ namespace SoccerSimulator.DataProviders
 		/// Gets a list of teams
 		/// </summary>
 		/// <returns>A list of all teams</returns>
-		public async Task<IReadOnlyList<Team>?> GetTeams()
+		public async Task<IEnumerable<Team>?> GetTeams()
 		{
-			return await Task.Run(IReadOnlyList<Team>? () =>
+			return await Task.Run(IEnumerable<Team>? () =>
 			{
 				try
 				{

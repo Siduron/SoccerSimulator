@@ -1,6 +1,6 @@
 ﻿using SoccerSimulator.Models;
 
-namespace SoccerSimulator.Services.Generators
+namespace SoccerSimulator.Services.Generators.SummaryGenerator
 {
 	/// <summary>
 	/// Creates a summary of the provided matches
