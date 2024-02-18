@@ -2,8 +2,9 @@
 
 namespace SoccerSimulator.DataProviders
 {
-	public interface ITeamsDataProvider
+	public interface ITeamsDataProvider<T>
+		where T : BaseTeam
 	{
-		Task<IEnumerable<Team>?> GetTeams();
+		Task<IEnumerable<T>?> GetTeams();
 	}
 }

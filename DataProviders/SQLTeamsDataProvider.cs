@@ -7,10 +7,11 @@ namespace SoccerSimulator.DataProviders
 	/// <summary>
 	/// Implementation of <see cref="ITeamsDataProvider"/> that retrieves teams from a SQL database and maps it to a model using Dapper.
 	/// </summary>
-	public sealed class SQLTeamsDataProvider : ITeamsDataProvider
+	public sealed class SQLTeamsDataProvider : ITeamsDataProvider<SimpleTeam>
 	{
 		private static readonly string ConnectionString = "Data Source=:memory:";
 		private static readonly string DataInitStringPath = "Data/teams.sql";
+		private static readonly string TeamsQuery = "SELECT Name, Strength FROM Teams";
 
 		private readonly ILogger _logger;
 
@@ -23,17 +24,16 @@ namespace SoccerSimulator.DataProviders
 		/// Gets a list of teams
 		/// </summary>
 		/// <returns>A list of all teams</returns>
-		public async Task<IEnumerable<Team>?> GetTeams()
+		public async Task<IEnumerable<SimpleTeam>?> GetTeams()
 		{
 			try
 			{
 				using(SqliteConnection connection = new(ConnectionString))
 				{
 					await connection.OpenAsync();
-
 					await InitDatabase(connection);
 
-					return await connection.QueryAsync<Team>("SELECT Name, Strength FROM Teams");
+					return await connection.QueryAsync<SimpleTeam>(TeamsQuery);
 				}
 			}
 			catch(Exception ex)
@@ -41,7 +41,7 @@ namespace SoccerSimulator.DataProviders
 				_logger.LogError(ex.Message);
 			}
 
-			return await Task.FromResult(new List<Team>());
+			return await Task.FromResult(new List<SimpleTeam>());
 		}
 
 		/// <summary>

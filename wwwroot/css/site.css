@@ -4,25 +4,20 @@ html {
 	min-height: 100%;
 }
 
-body {
-	margin-bottom: 60px;
-	background-color: #89BCE5;
+.rounds, .simulation {
+	display: flex;
 }
 
 .simulation {
-	width: auto;
+	width: 1200px;
+	margin: 0 auto;
 	margin-top: 48px;
+	flex-direction: column;
 }
 
 .rounds {
-	display: flex;
-	justify-content: center;
+	flex-direction: row;
 	margin-bottom: 24px;
-	width: 100%;
-}
-
-.summary {
-	width: 100%;
 }
 
 .round, .summary {
@@ -35,6 +30,13 @@ body {
 	border: solid;
 	animation: scaleIn 0.2s ease-in-out;
 	padding: 12px;
+}
+
+.summary {
+}
+
+table {
+	width: 100%;
 }
 
 td {

@@ -5,9 +5,9 @@ namespace SoccerSimulator.DataProviders
 {
 	/// <summary>
 	/// Implementation of <see cref="ITeamsDataProvider"/> that retrieves the data of the teams from a JSON file. 
-	/// An implementation of ITeamsDataProvider that uses a database would have been preferred, but JSON is the data source of choice due to the time constraint.
+	/// This was a solution to provide data before SQLTeamsDataProvider was implemented, so it's kind of legacy now.
 	/// </summary>
-	public sealed class JSONTeamsDataProvider : ITeamsDataProvider
+	public sealed class JSONTeamsDataProvider : ITeamsDataProvider<SimpleTeam>
 	{
 		private static readonly string DataPath = "Data/teams.json";
 
@@ -22,13 +22,13 @@ namespace SoccerSimulator.DataProviders
 		/// Gets a list of teams
 		/// </summary>
 		/// <returns>A list of all teams</returns>
-		public async Task<IEnumerable<Team>?> GetTeams()
+		public async Task<IEnumerable<SimpleTeam>?> GetTeams()
 		{
-			return await Task.Run(IEnumerable<Team>? () =>
+			return await Task.Run(IEnumerable<SimpleTeam>? () =>
 			{
 				try
 				{
-					return JsonConvert.DeserializeObject<List<Team>>(File.ReadAllText(DataPath));
+					return JsonConvert.DeserializeObject<List<SimpleTeam>>(File.ReadAllText(DataPath));
 				}
 				catch(Exception ex)
 				{
