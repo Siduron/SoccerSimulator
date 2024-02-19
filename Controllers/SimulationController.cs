@@ -9,15 +9,15 @@ namespace SoccerSimulator.Controllers
 	public class SimulationController : Controller
 	{
 		private readonly IMapper _mapper;
-		private readonly ISimulationService _simulationDataProvider;
+		private readonly ISimulationService _simulationService;
 
-		public SimulationController(IMapper mapper, ISimulationService simulationDataProvider)
+		public SimulationController(IMapper mapper, ISimulationService simulationService)
 		{
 			_mapper = mapper;
-			_simulationDataProvider = simulationDataProvider;
+			_simulationService = simulationService;
 		}
 
-		public async Task<IActionResult> Index() => View(_mapper.Map<SimulationViewModel>(await _simulationDataProvider.GetSimulation()));
+		public async Task<IActionResult> Index() => View(_mapper.Map<SimulationViewModel>(await _simulationService.GetSimulation()));
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()

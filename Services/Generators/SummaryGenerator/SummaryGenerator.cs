@@ -3,7 +3,7 @@
 namespace SoccerSimulator.Services.Generators.SummaryGenerator
 {
 	/// <summary>
-	/// Creates a summary of the provided matches
+	/// Creates a summary of the provided rounds
 	/// </summary>
 	public static class SummaryGenerator
 	{
