@@ -4,6 +4,9 @@ html {
 	min-height: 100%;
 }
 
+body {
+	background-color: #89BCE5;
+}
 .rounds, .simulation {
 	display: flex;
 }
