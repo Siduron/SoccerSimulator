@@ -109,8 +109,8 @@ namespace SoccerSimulator.Services.Generators.RoundsGenerator
 		/// <summary>
 		/// Calculate the chance of a goal being scored by a team
 		/// </summary>
-		/// <param name="strength1"></param>
-		/// <param name="strength2"></param>
+		/// <param name="team1"></param>
+		/// <param name="team2"></param>
 		/// <returns>Chance of scoring a goal</returns>
 		protected abstract double CalculateGoalChance(T team1, T team2);
 	}

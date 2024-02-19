@@ -13,7 +13,7 @@ namespace SoccerSimulator.Services.Generators.SummaryGenerator
 		/// <summary>
 		/// Generates the summary of each team
 		/// </summary>
-		/// <param name="matches"></param>
+		/// <param name="rounds"></param>
 		/// <returns>A list with data that summarizes the results of a team, sorted by rank (which is based on various results)</returns>
 		public static async Task<IReadOnlyList<TeamSummary>> GenerateTeamSummaries(IReadOnlyList<Round> rounds)
 		{
@@ -55,7 +55,7 @@ namespace SoccerSimulator.Services.Generators.SummaryGenerator
 		/// </summary>
 		/// <param name="teamData">Data of all teams</param>
 		/// <param name="team">The data of the team to update</param>
-		/// <param name="opponent">The data of the opponen</param>
+		/// <param name="opponent">The data of the opponent</param>
 		private static void UpdateTeamData(ref Dictionary<string, SummaryData> teamData, MatchTeam team, MatchTeam opponent)
 		{
 			SummaryData teamSummaryData;
