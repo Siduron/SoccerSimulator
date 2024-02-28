@@ -1,0 +1,32 @@
+version: '3.4'
+
+services:
+  core:
+    container_name: soccersimulator-core
+    image: core
+    build:
+      context: .
+      dockerfile: Core/Dockerfile
+    networks:
+      - soccersimulator-net
+    ports:
+      - "8080:80" 
+
+  web:
+    container_name: soccersimulator-web
+    image: web
+    build:
+      context: .
+      dockerfile: Web/Dockerfile
+    networks:
+      - soccersimulator-net
+    environment:
+      - CORE_API_URL=http://core:80
+    ports:
+      - "8081:80"
+    depends_on:
+      - core
+
+networks:
+  soccersimulator-net:
+    driver: bridge

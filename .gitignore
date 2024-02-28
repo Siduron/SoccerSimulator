@@ -1,4 +1,5 @@
 bin/
 obj/
 .vs/
-/wwwroot/lib/
+
+Web/wwwroot/lib/
